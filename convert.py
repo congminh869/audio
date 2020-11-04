@@ -1,4 +1,3 @@
-#https://intellectape.com/simple-ftp-file-transfer/
 import numpy as np 
 import socket
 import datetime
@@ -40,7 +39,7 @@ class UdpReceiver:
         self.recSecond = 10
         sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         sock.bind((self.HOST,self.localPort))
-        self.voIPSettings['Prefix']= 'D:/hoctap/AI/PYTHON/convert/Room1'       
+        self.voIPSettings['Prefix']= 'D:/hoctap/AI/PYTHON/convert/Room1/Room1'       
         self.voIPSettings['waveRecorder'] =  WaveWrite(self.voIPSettings['Prefix'],self.recSecond)            
         while True:           
             data, remoteEP = sock.recvfrom(140)
@@ -70,20 +69,20 @@ class WaveWrite:
 
     def WavHeader(self,sampleRate, bitsPerSample, channels): # samplingFreq,  sampleBit, channels
         datasize = sampleRate * self.waveSecond * channels * bitsPerSample // 8# = 5274984
-        o = bytes("RIFF",'ascii')                                               # (4byte) Marks file as RIFF
-        o += (datasize + 36).to_bytes(4,'little')                               # (4byte) File size in bytes excluding this and RIFF marker
-        o += bytes("WAVE",'ascii')                                              # (4byte) File type
-        o += bytes("fmt ",'ascii')                                              # (4byte) Format Chunk Marker
-        o += (16).to_bytes(4,'little')                                          # (4byte) Length of above format data
-        o += (1).to_bytes(2,'little')                                           # (2byte) Format type (1 - PCM)
-        o += (channels).to_bytes(2,'little')                                    # (2byte)
-        o += (sampleRate).to_bytes(4,'little')                                  # (4byte)
-        o += (sampleRate * channels * bitsPerSample // 8).to_bytes(4,'little')  # (4byte)
-        o += (channels * bitsPerSample // 8).to_bytes(2,'little')               # (2byte)
-        o += (bitsPerSample).to_bytes(2,'little')                               # (2byte)
-        o += bytes("data",'ascii')                                              # (4byte) Data Chunk Marker
-        o += (datasize).to_bytes(4,'little')                                    # (4byte) Data size in bytes
-        return o   
+        header = bytes("RIFF",'ascii')                                               # (4byte) Marks file as RIFF
+        header += (datasize + 36).to_bytes(4,'little')                               # (4byte) File size in bytes excluding this and RIFF marker
+        header += bytes("WAVE",'ascii')                                              # (4byte) File type
+        header += bytes("fmt ",'ascii')                                              # (4byte) Format Chunk Marker
+        header += (16).to_bytes(4,'little')                                          # (4byte) Length of above format data
+        header += (1).to_bytes(2,'little')                                           # (2byte) Format type (1 - PCM)
+        header += (channels).to_bytes(2,'little')                                    # (2byte)
+        header += (sampleRate).to_bytes(4,'little')                                  # (4byte)
+        header += (sampleRate * channels * bitsPerSample // 8).to_bytes(4,'little')  # (4byte)
+        header += (channels * bitsPerSample // 8).to_bytes(2,'little')               # (2byte)
+        header += (bitsPerSample).to_bytes(2,'little')                               # (2byte)
+        header += bytes("data",'ascii')                                              # (4byte) Data Chunk Marker
+        header += (datasize).to_bytes(4,'little')                                    # (4byte) Data size in bytes
+        return header 
     
     def Open(self):
         x = datetime.datetime.now()
@@ -102,3 +101,8 @@ class WaveWrite:
 
 c = UdpReceiver()
 c.VoiceIPRecord()
+
+
+
+      
+  
